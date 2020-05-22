@@ -1,0 +1,33 @@
+### Goland template
+.idea
+.vscode
+*.iml
+.out
+out
+gen
+*.exe
+
+### Glid, Depe template
+glide.yaml
+glide.lock
+vendor/*
+go.mod
+go.sum
+
+### macOS templates
+
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+build
+release
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent

@@ -1,0 +1,12 @@
+version: "3"
+services:
+  news:
+    image: gitlab.mcsolutions.ru:4567/find-psy/back/admins/news:latest
+    restart: always
+    ports:
+      - "3008:3008"
+
+networks:
+  default:
+    external:
+      name: find-psy.net

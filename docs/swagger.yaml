@@ -1,0 +1,512 @@
+openapi: 3.0.2
+servers:
+  - url: "http://localhost:3008/api/news"
+info:
+  description: "news"
+  version: 0.1.3
+  title: "news"
+  contact:
+    email: "timurkash@yandex.ru"
+tags:
+  - name: "users"
+    description: "For users"
+  - name: "admins"
+    description: "For admins"
+paths:
+  /get:
+    get:
+      tags:
+        - "users"
+      summary: "get all news"
+      description: ""
+      operationId: get
+      parameters:
+        - in: "header"
+          name: "lang"
+          schema:
+            type: "string"
+            default: "ru"
+          required: true
+        - in: "header"
+          name: "page"
+          schema:
+            type: "array"
+            items:
+              type: "integer"
+            default:
+              - 0
+              - 10
+          description: "0 - offset, 10 - limit"
+      responses:
+        200:
+          description: "successful example operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NewsOut"
+        400:
+          description: "Invalid input"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StatusOut"
+        500:
+          description: "Invalid input"
+  /get/{region}:
+    get:
+      tags:
+        - "users"
+      summary: "get all news by lang"
+      description: ""
+      operationId: getRegion
+      parameters:
+        - in: "header"
+          name: "lang"
+          schema:
+            type: "string"
+            default: "ru"
+          required: true
+        - in: "path"
+          name: "region"
+          schema:
+            type: "string"
+            default: "moscow"
+          required: true
+        - in: "header"
+          name: "page"
+          schema:
+            type: "array"
+            items:
+              type: "integer"
+            default:
+              - 0
+              - 10
+          description: "0 - offset, 10 - limit"
+      responses:
+        200:
+          description: "successful example operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NewsOut"
+        400:
+          description: "Invalid input"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StatusOut"
+        500:
+          description: "Invalid input"
+  /getFull:
+    get:
+      tags:
+        - "admins"
+      summary: "Get all full news by lang & region"
+      description: "Get all full news by lang & region"
+      operationId: "getFull"
+      parameters:
+        - in: "header"
+          name: "lang"
+          schema:
+            type: "string"
+            default: "ru"
+          required: true
+        - in: "header"
+          name: "Role"
+          schema:
+            type: "string"
+            default: "NewsAdmin"
+        - in: "header"
+          name: "AdminLogin"
+          schema:
+            type: "string"
+            default: "timurkash"
+        - in: "header"
+          name: "page"
+          schema:
+            type: "array"
+            items:
+              type: "integer"
+            default:
+              - 0
+              - 10
+          description: "0 - offset, 10 - limit"
+      responses:
+        200:
+          description: "successful example operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NewsFullOut"
+        400:
+          description: "Invalid input"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StatusOut"
+        500:
+          description: "Invalid input"
+  /getFull/{region}:
+    get:
+      tags:
+        - "admins"
+      summary: "Get all full news by lang & region"
+      description: "Get all full news by lang & region"
+      operationId: "getFullRegion"
+      parameters:
+        - in: "header"
+          name: "lang"
+          schema:
+            type: "string"
+            default: "ru"
+          required: true
+        - in: "path"
+          name: "region"
+          schema:
+            type: "string"
+            default: "moscow"
+          required: true
+        - in: "header"
+          name: "Role"
+          schema:
+            type: "string"
+            default: "NewsAdmin"
+          required: true
+        - in: "header"
+          name: "AdminLogin"
+          schema:
+            type: "string"
+            default: "timurkash"
+          required: true
+        - in: "header"
+          name: "page"
+          schema:
+            type: "array"
+            items:
+              type: "integer"
+            default:
+              - 0
+              - 10
+          description: "0 - offset, 10 - limit"
+      responses:
+        200:
+          description: "successful example operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NewsFullOut"
+        400:
+          description: "Invalid input"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StatusOut"
+        500:
+          description: "Invalid input"
+  /post:
+    post:
+      tags:
+        - "admins"
+      summary: "post news"
+      description: ""
+      operationId: post
+      parameters:
+        - in: "header"
+          name: "lang"
+          schema:
+            type: "string"
+            default: "ru"
+          required: true
+        - in: "header"
+          name: "Role"
+          schema:
+            type: "string"
+            default: "NewsAdmin"
+          required: true
+        - in: "header"
+          name: "AdminLogin"
+          schema:
+            type: "string"
+            default: "timurkash"
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/OneNews"
+        description: ""
+        required: true
+      responses:
+        200:
+          description: "successful example operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IdOut"
+        400:
+          description: "Invalid input"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StatusOut"
+        500:
+          description: "Invalid input"
+  /put/{id}:
+    put:
+      tags:
+        - "admins"
+      summary: "put example"
+      description: ""
+      operationId: putId
+      parameters:
+        - in: "path"
+          name: "id"
+          schema:
+            type: "integer"
+            format: "int64"
+            default: 123
+          required: true
+        - in: "header"
+          name: "Role"
+          schema:
+            type: "string"
+            default: "NewsAdmin"
+          required: true
+        - in: "header"
+          name: "AdminLogin"
+          schema:
+            type: "string"
+            default: "timurkash"
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/OneNews"
+        description: ""
+        required: true
+      responses:
+        200:
+          description: "successful example operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StatusOut"
+        400:
+          description: "Invalid input"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StatusOut"
+        500:
+          description: "Invalid input"
+  /delete/{id}:
+    delete:
+      tags:
+        - "admins"
+      summary: "delete example"
+      description: ""
+      operationId: deleteId
+      parameters:
+        - in: "path"
+          name: "id"
+          schema:
+            type: "integer"
+            format: "int64"
+            default: 123
+          required: true
+        - in: "header"
+          name: "Role"
+          schema:
+            type: "string"
+            default: "NewsAdmin"
+          required: true
+        - in: "header"
+          name: "AdminLogin"
+          schema:
+            type: "string"
+            default: "timurkash"
+          required: true
+      responses:
+        200:
+          description: "successful example operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StatusOut"
+        400:
+          description: "Invalid input"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StatusOut"
+        500:
+          description: "Invalid input"
+components:
+  schemas:
+    OneNews:
+      type: "object"
+      required:
+        - "date"
+        - "title"
+        - "lang"
+      properties:
+        date:
+          type: "string"
+          format: "date"
+          example: "2020-01-01"
+        title:
+          type: "string"
+          example: "Title"
+        text:
+          type: "string"
+          example: "Lorem ipsum"
+        region:
+          type: "string"
+          example: "moscow"
+        tags:
+          type: "string"
+          example: "site,development"
+    OneNewsFull:
+      type: "object"
+      required:
+        - "id"
+        - "date"
+        - "title"
+        - "lang"
+        - "region"
+        - "createDate"
+        - "login"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+          example: 1
+        lang:
+          type: "string"
+          example: "ru"
+        date:
+          type: "string"
+          format: "date"
+          example: "2020-01-01"
+        title:
+          type: "string"
+          example: "Title"
+        text:
+          type: "string"
+          example: "Lorem ipsum"
+        region:
+          type: "string"
+          example: "moscow"
+        tags:
+          type: "string"
+          example: "site,development"
+        login:
+          type: "string"
+          example: "timurkash"
+        createDate:
+          type: "string"
+          format: "datetime"
+          example: "2020-01-22 13:56:52.0327222 +0300 MSK m=+0.029999701"
+        updateDate:
+          type: "string"
+          format: "datetime"
+          example: "2020-01-22 13:56:52.0327222 +0300 MSK m=+0.029999701"
+    NewsOut:
+      type: "object"
+      required:
+        - "news"
+      properties:
+        news:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/OneNews"
+        paging:
+          $ref: "#/components/schemas/PagingOut"
+    NewsFullOut:
+      type: "object"
+      required:
+        - "news"
+      properties:
+        news:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/OneNewsFull"
+        paging:
+          $ref: "#/components/schemas/PagingOut"
+    # Example:
+    #   type: "object"
+    #   required:
+    #     - "example"
+    #   properties:
+    #     example:
+    #       type: "integer"
+    #       format: "int64"
+    #       example: 123
+    PagingOut:
+      type: "object"
+      required:
+        - "from"
+        - "to"
+        - "count"
+        - "hasNext"
+        - "totalCount"
+      properties:
+        from:
+          type: "integer"
+          format: "int64"
+          example: 0
+        to:
+          type: "integer"
+          format: "int64"
+          example: 10
+        count:
+          type: "integer"
+          format: "int64"
+          example: 10
+        hasNext:
+          type: "boolean"
+          example: true
+        totalCount:
+          type: "integer"
+          format: "int64"
+          example: 123
+    Status:
+      type: "object"
+      required:
+        - "ok"
+      properties:
+        ok:
+          type: "boolean"
+          example: false
+        error:
+          type: "string"
+          example: "error"
+    StatusOut:
+      type: "object"
+      required:
+        - "status"
+      properties:
+        status:
+          $ref: "#/components/schemas/Status"
+    IdOut:
+      type: "object"
+      required:
+        - "id"
+      #        - "createDate"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+          example: 123
+  #        createDate:
+  #          type: "string"
+  #          format: "date-time"
+  #          example: "2020-01-22 13:56:52.0327222 +0300 MSK m=+0.029999701"
+  #        updateDate:
+  #          type: "string"
+  #          format: "date-time"
+  #          example: "2020-01-22 13:56:52.0327222 +0300 MSK m=+0.029999701"
+  responses: {}
+  parameters: {}
+  examples: {}

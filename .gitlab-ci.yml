@@ -1,0 +1,71 @@
+
+stages:
+  - test
+  - build
+  - deploy
+
+services:
+  - docker:dind
+
+before_script:
+  - export GOPATH=/go
+
+test:
+  image: golang:1.14
+  stage: test
+  script:
+    - cd pkg/handlers
+    - go test -v -mod=vendor
+  tags:
+    - go-backend
+
+build:
+  image: gitlab.mcsolutions.ru:4567/deployment/images/docker-deploy:latest
+  stage: build
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - make build-container
+    - make push-container
+#    - make push-container-public
+  tags:
+    - go-backend
+
+deploy_kubernetes-staging:
+  image: dtzar/helm-kubectl:3.0.0
+  stage: deploy
+  before_script:
+    - mkdir /etc/deploy
+    - echo ${kube_config} | base64 -d > ${KUBECONFIG}
+    - kubectl config use-context do-ams3-find-psy-cluster
+    - helm repo add find-psy https://timurkash.github.com/helm-example/
+    - helm repo update
+  script:
+    - export DEPLOYS=$(helm list -n=find-psy-staging | grep news-sfpg | wc -l)
+    - if [ ${DEPLOYS} -eq 0 ]; then
+      helm install news-sfpg find-psy/sfpg -n=find-psy-staging -f=values.yaml;
+      else
+      helm upgrade news-sfpg find-psy/sfpg -n=find-psy-staging -f=values.yaml;
+      fi
+  tags:
+    - go-backend
+
+deploy_kubernetes-production:
+  image: dtzar/helm-kubectl:3.0.0
+  stage: deploy
+  when: manual
+  before_script:
+    - mkdir /etc/deploy
+    - echo ${kube_config} | base64 -d > ${KUBECONFIG}
+    - kubectl config use-context do-ams3-find-psy-cluster
+    - helm repo add find-psy https://timurkash.github.com/helm-example/
+    - helm repo update
+  script:
+    - export DEPLOYS=$(helm list -n=find-psy-production | grep news-sfpg | wc -l)
+    - if [ ${DEPLOYS} -eq 0 ]; then
+      helm install news-sfpg find-psy/sfpg -n=find-psy-production -f=values.yaml;
+      else
+      helm upgrade news-sfpg find-psy/sfpg -n=find-psy-production -f=values.yaml;
+      fi
+  tags:
+    - go-backend

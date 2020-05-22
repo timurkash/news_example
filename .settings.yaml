@@ -1,0 +1,23 @@
+name: news
+version: v1
+description: news
+email: timurkash@yandex.ru
+port: 3009
+extport: 8081
+basepath: /api/news
+dockerUsername: timurkash
+gitlab:
+  path: gitlab.mcsolutions.ru
+  template: charts/rest-template
+  group: find-psy
+  subgroup: back/admins
+  registryport: 4567
+  stageip: 185.44.15.106
+  lib: lib
+cd:
+  tag: go-backend
+  helmrepo:
+    chart: sfpg
+    url: https://timurkash.github.com/helm-example/
+    kubercontext: do-ams3-find-psy-cluster
+    imagePullSecret: k8svagabond-fp-bot-pull-secret
